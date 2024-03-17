@@ -26,61 +26,10 @@
   {
     "type": "block",
     "named": true,
-    "fields": {
-      "operators": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "!=",
-            "named": false
-          },
-          {
-            "type": "<",
-            "named": false
-          },
-          {
-            "type": "<=",
-            "named": false
-          },
-          {
-            "type": "<>",
-            "named": false
-          },
-          {
-            "type": "==",
-            "named": false
-          },
-          {
-            "type": ">",
-            "named": false
-          },
-          {
-            "type": ">=",
-            "named": false
-          },
-          {
-            "type": "in",
-            "named": false
-          },
-          {
-            "type": "is",
-            "named": false
-          },
-          {
-            "type": "is not",
-            "named": false
-          },
-          {
-            "type": "not in",
-            "named": false
-          }
-        ]
-      }
-    },
+    "fields": {},
     "children": {
-      "multiple": true,
-      "required": false,
+      "multiple": false,
+      "required": true,
       "types": [
         {
           "type": "primary_expression",
@@ -199,6 +148,21 @@
     }
   },
   {
+    "type": "module",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": false,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "parameter",
     "named": true,
     "fields": {},
@@ -245,6 +209,10 @@
       "required": true,
       "types": [
         {
+          "type": "false",
+          "named": true
+        },
+        {
           "type": "float",
           "named": true
         },
@@ -254,6 +222,36 @@
         },
         {
           "type": "true",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "program",
+    "named": true,
+    "fields": {
+      "variables": {
+        "multiple": true,
+        "required": false,
+        "types": [
+          {
+            "type": "variable",
+            "named": true
+          }
+        ]
+      }
+    },
+    "children": {
+      "multiple": true,
+      "required": false,
+      "types": [
+        {
+          "type": "function_definition",
+          "named": true
+        },
+        {
+          "type": "module",
           "named": true
         }
       ]
@@ -298,10 +296,6 @@
     }
   },
   {
-    "type": "!=",
-    "named": false
-  },
-  {
     "type": "(",
     "named": false
   },
@@ -318,31 +312,7 @@
     "named": false
   },
   {
-    "type": "<",
-    "named": false
-  },
-  {
-    "type": "<=",
-    "named": false
-  },
-  {
-    "type": "<>",
-    "named": false
-  },
-  {
     "type": "=",
-    "named": false
-  },
-  {
-    "type": "==",
-    "named": false
-  },
-  {
-    "type": ">",
-    "named": false
-  },
-  {
-    "type": ">=",
     "named": false
   },
   {
@@ -362,6 +332,10 @@
     "named": false
   },
   {
+    "type": "false",
+    "named": true
+  },
+  {
     "type": "float",
     "named": true
   },
@@ -374,27 +348,15 @@
     "named": true
   },
   {
-    "type": "in",
-    "named": false
-  },
-  {
-    "type": "integer",
-    "named": false
-  },
-  {
     "type": "integer",
     "named": true
   },
   {
-    "type": "is",
+    "type": "integer",
     "named": false
   },
   {
-    "type": "is not",
-    "named": false
-  },
-  {
-    "type": "not in",
+    "type": "module",
     "named": false
   },
   {

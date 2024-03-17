@@ -1,10 +1,5 @@
-define bar( foo, bar: integer)
-variables foo, bar : integer from 0 to 4
-variables vaz : array  from 0 to 4 of integer   
+module oo
 
-constants foo = 67, z = 67
-begin
-    6 <> 6
-    6 < 7
-end
-
+define foo()
+constants foo = 10
+    5

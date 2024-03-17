@@ -91,7 +91,7 @@ module.exports = grammar({
   ],
 
   inline: $ => [
-    $.comparison_operator
+    // $.comparison_operator
     //   $._simple_statement,
     //   $._compound_statement,
     //   $._suite,
@@ -100,7 +100,7 @@ module.exports = grammar({
     //   $.keyword_identifier,
   ],
 
-  
+
 
   // word: $ => $.identifier,
 
@@ -408,30 +408,6 @@ module.exports = grammar({
     //   field('value', $.expression),
     // )),
 
-    function_definition: $ => seq(
-      'define',
-      field('name', $.identifier),
-      field('parameters', $.parameters),
-      field("variables", repeat($.variable)),
-      field("constants", repeat($.constant)),
-      $.block
-      //   optional(
-      //     seq(
-      //       '->',
-      //       field('return_type', $.type),
-      //     ),
-      //   ),
-      //   ':',
-      //   field('body', $._suite),
-    ),
-
-    parameters: $ => seq(
-      '(',
-      optional($._parameters),
-      ')',
-    ),
-
-    constant: $ => seq("constants", commaSep1(seq($.identifier, "=", $.primary_expression))),
     // lambda_parameters: $ => $._parameters,
 
     // list_splat: $ => seq(
@@ -532,37 +508,45 @@ module.exports = grammar({
     // ),
 
 
-    program: $ => repeat(
+    program: $ => seq(
+      optional($.module),
+
+      field("variables", repeat($.variable)),
+      repeat(
       $.function_definition
+      )
     ),
-    _begin: _ => "begin",
-    _end: _ => "end",
-    comparison_operator: $ => prec.left(PREC.compare, seq(
-      $.primary_expression,
-      repeat1(seq(
-        field('operators',
-          choice(
-            '<',
-            '<=',
-            '==',
-            '!=',
-            '>=',
-            '>',
-            '<>',
-            'in',
-            alias(seq('not', 'in'), 'not in'),
-            'is',
-            alias(seq('is', 'not'), 'is not'),
-          )),
-        $.primary_expression,
-      )), $._newline
-    )),
+    module: $ => seq("module", $.identifier),
+    function_definition: $ => seq(
+      'define',
+      field('name', $.identifier),
+      field('parameters', $.parameters),
+      field("variables", repeat($.variable)),
+      field("constants", repeat($.constant)),
+      // $._newline,
+      $.block
+      //   optional(
+      //     seq(
+      //       '->',
+      //       field('return_type', $.type),
+      //     ),
+      //   ),
+      //   ':',
+      //   field('body', $._suite),
+    ),
+
+    parameters: $ => seq(
+      '(',
+      optional($._parameters),
+      ')',
+    ),
+
+    constant: $ => seq("constants", commaSep1(seq($.identifier, "=", $.primary_expression))),
     block: $ => seq(
-      $._begin,
       $._indent,
-      repeat(seq(choice($.comparison_operator), $._newline)),
+      $.primary_expression,
+      $._newline,
       $._dedent,
-      $._end,
     ),
 
     //   expression_list: $ => prec.right(seq(
@@ -772,7 +756,7 @@ module.exports = grammar({
       $.integer,
       $.float,
       $.true,
-      //     $.false,
+      $.false,
       //     $.none,
       //     $.unary_operator,
       //     $.attribute,
@@ -1170,8 +1154,8 @@ module.exports = grammar({
       );
     },
     basic_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer)))),
-    array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")) ,
-    delclaration_array_type: $ => seq("array", type_constraint($.integer),  "of", choice("string", "integer", "real", "boolean")) ,
+    array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),
+    delclaration_array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
     declaration_type: $ => choice($.basic_type, $.delclaration_array_type),
     type: $ => choice($.basic_type, $.array_type,),
 
