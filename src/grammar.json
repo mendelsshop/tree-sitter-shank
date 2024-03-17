@@ -125,6 +125,70 @@
         }
       ]
     },
+    "assignment": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
+        {
+          "type": "STRING",
+          "value": ":="
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        }
+      ]
+    },
+    "expression": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "primary_expression"
+        }
+      ]
+    },
+    "statement": {
+      "type": "CHOICE",
+      "members": [
+        {
+          "type": "SYMBOL",
+          "name": "repeat_statement"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "assignment"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        }
+      ]
+    },
+    "repeat_statement": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "repeat"
+        },
+        {
+          "type": "STRING",
+          "value": "until"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "expression"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "block"
+        }
+      ]
+    },
     "constant": {
       "type": "SEQ",
       "members": [
@@ -193,12 +257,11 @@
           "name": "_indent"
         },
         {
-          "type": "SYMBOL",
-          "name": "primary_expression"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_newline"
+          "type": "REPEAT",
+          "content": {
+            "type": "SYMBOL",
+            "name": "statement"
+          }
         },
         {
           "type": "SYMBOL",
@@ -335,6 +398,10 @@
     "primary_expression": {
       "type": "CHOICE",
       "members": [
+        {
+          "type": "SYMBOL",
+          "name": "identifier"
+        },
         {
           "type": "SYMBOL",
           "name": "integer"
@@ -629,11 +696,11 @@
     },
     "true": {
       "type": "STRING",
-      "value": "True"
+      "value": "true"
     },
     "false": {
       "type": "STRING",
-      "value": "False"
+      "value": "false"
     }
   },
   "extras": [

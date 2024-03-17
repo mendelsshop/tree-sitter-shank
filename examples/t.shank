@@ -1,5 +1,10 @@
 module oo
 
 define foo()
-constants foo = 10
-    5
+variables 
+    bar, baz : integer
+constants foo = 10, has = false
+    b := 9
+    repeat until foo
+        a := 7
+    b := 8

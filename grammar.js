@@ -513,7 +513,7 @@ module.exports = grammar({
 
       field("variables", repeat($.variable)),
       repeat(
-      $.function_definition
+        $.function_definition
       )
     ),
     module: $ => seq("module", $.identifier),
@@ -541,11 +541,14 @@ module.exports = grammar({
       ')',
     ),
 
+    assignment: $ => seq($.identifier, ":=", $.expression),
+    expression: $ => choice($.primary_expression),
+    statement: $ => choice($.repeat_statement, $.assignment, $.expression),
+    repeat_statement: $ => seq("repeat", "until", $.expression, $.block),
     constant: $ => seq("constants", commaSep1(seq($.identifier, "=", $.primary_expression))),
     block: $ => seq(
       $._indent,
-      $.primary_expression,
-      $._newline,
+      repeat($.statement),
       $._dedent,
     ),
 
@@ -749,9 +752,9 @@ module.exports = grammar({
     primary_expression: $ => choice(
       //     $.await,
       //     $.binary_operator,
-      //     $.identifier,
+      $.identifier,
       //     $.keyword_identifier,
-      //     $.string,
+      // $.string,
       //     $.concatenated_string,
       $.integer,
       $.float,
@@ -1175,8 +1178,8 @@ module.exports = grammar({
     //     alias('type', $.identifier),
     //   ),
 
-    true: _ => 'True',
-    false: _ => 'False',
+    true: _ => 'true',
+    false: _ => 'false',
     //   none: _ => 'None',
 
     //   await: $ => prec(PREC.unary, seq(
