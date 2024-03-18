@@ -46,7 +46,8 @@ module.exports = grammar({
   //   $.line_continuation,
   // ],
 
-  // conflicts: $ => [
+  conflicts: $ => [
+    [$.argument, $.primary_expression]
   //   [$.primary_expression, $.pattern],
   //   [$.primary_expression, $.list_splat_pattern],
   //   [$.tuple, $.tuple_pattern],
@@ -55,7 +56,7 @@ module.exports = grammar({
   //   [$.named_expression, $.as_pattern],
   //   [$.print_statement, $.primary_expression],
   //   [$.type_alias_statement, $.primary_expression],
-  // ],
+  ],
 
   // supertypes: $ => [
   //   $._simple_statement,
@@ -80,14 +81,14 @@ module.exports = grammar({
     // error recovery, because the external scanner can maintain the overall
     // structure by returning dedent tokens whenever a dedent occurs, even
     // if no dedent is expected.
-    $.comment,
+    // $.comment,
 
     // Allow the external scanner to check for the validity of closing brackets
     // so that it can avoid returning dedent tokens between brackets.
-    ']',
-    ')',
-    '}',
-    'except',
+    // ']',
+    // ')',
+    // '}',
+    // 'except',
   ],
 
   inline: $ => [
@@ -510,10 +511,12 @@ module.exports = grammar({
 
     program: $ => seq(
       optional($.module),
+      // a module is a list of vairables and functions intermixed
+      repeat(choice(
+        $.variable,
 
-      field("variables", repeat($.variable)),
-      repeat(
         $.function_definition
+      )
       )
     ),
     module: $ => seq("module", $.identifier),
@@ -521,18 +524,11 @@ module.exports = grammar({
       'define',
       field('name', $.identifier),
       field('parameters', $.parameters),
+      
+      choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),
-      // $._newline,
       $.block
-      //   optional(
-      //     seq(
-      //       '->',
-      //       field('return_type', $.type),
-      //     ),
-      //   ),
-      //   ':',
-      //   field('body', $._suite),
     ),
 
     parameters: $ => seq(
@@ -543,12 +539,22 @@ module.exports = grammar({
 
     assignment: $ => seq($.identifier, ":=", $.expression),
     expression: $ => choice($.primary_expression),
-    statement: $ => choice($.repeat_statement, $.assignment, $.expression),
+    statement: $ => choice($.call_statement, $.while_statement, $.for, $.if_then_statement, $.repeat_statement, $.assignment),
     repeat_statement: $ => seq("repeat", "until", $.expression, $.block),
+    while_statement: $ => seq("while", $.expression, $.block),
+    call_statement: $ => seq(field("function", $.identifier), optional(commaSep1($.argument))),
+    argument: $ => choice(seq(field("var", optional("var")), $.identifier), $.expression),
+    if_then_statement: $ => seq($.if, repeat($.elsif), optional($.else)),
+    if: $ => seq("if", $.expression, $.expression),
+    elsif: $ => seq("elsif", $.expression, $.block),
+    else: $ => seq("else", $.block),
+
+    for: $ => seq("for", $.identifier, "from", $.integer, "to", $.integer, $.block),
+
     constant: $ => seq("constants", commaSep1(seq($.identifier, "=", $.primary_expression))),
     block: $ => seq(
       $._indent,
-      repeat($.statement),
+      repeat(seq($.statement, choice($.comment, $._newline))),
       $._dedent,
     ),
 
@@ -668,14 +674,16 @@ module.exports = grammar({
       optional($.var),
       commaSep1($.identifier),
       ":",
-      $.type
+      $.type,
+      choice($.comment, $._newline),
     ),
 
     variable: $ => seq(
       "variables",
       commaSep1($.identifier),
       ":",
-      $.declaration_type
+      $.declaration_type,
+      choice($.comment, $._newline),
     ),
     //   pattern: $ => choice(
     //     $.identifier,
@@ -1162,6 +1170,10 @@ module.exports = grammar({
     declaration_type: $ => choice($.basic_type, $.delclaration_array_type),
     type: $ => choice($.basic_type, $.array_type,),
 
+    // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
+    comment: $ => seq(token(
+      /{[^}]*(?:[^}][^}]*)*}[^\S\n]*/), $._newline
+    ),
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
 
     //   keyword_identifier: $ => choice(

@@ -1,10 +1,7 @@
-module oo
 
-define foo()
-variables 
-    bar, baz : integer
-constants foo = 10, has = false
-    b := 9
-    repeat until foo
-        a := 7
-    b := 8
+
+define bar(var v : string) {gg}
+constants bar = 10, has = false
+
+    TT 4, 5, var t, 7 
+    TT f
