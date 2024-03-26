@@ -48,14 +48,14 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.argument, $.primary_expression]
-  //   [$.primary_expression, $.pattern],
-  //   [$.primary_expression, $.list_splat_pattern],
-  //   [$.tuple, $.tuple_pattern],
-  //   [$.list, $.list_pattern],
-  //   [$.with_item, $._collection_elements],
-  //   [$.named_expression, $.as_pattern],
-  //   [$.print_statement, $.primary_expression],
-  //   [$.type_alias_statement, $.primary_expression],
+    //   [$.primary_expression, $.pattern],
+    //   [$.primary_expression, $.list_splat_pattern],
+    //   [$.tuple, $.tuple_pattern],
+    //   [$.list, $.list_pattern],
+    //   [$.with_item, $._collection_elements],
+    //   [$.named_expression, $.as_pattern],
+    //   [$.print_statement, $.primary_expression],
+    //   [$.type_alias_statement, $.primary_expression],
   ],
 
   // supertypes: $ => [
@@ -140,57 +140,6 @@ module.exports = grammar({
     //   $.type_alias_statement,
     // ),
 
-    // import_statement: $ => seq(
-    //   'import',
-    //   $._import_list,
-    // ),
-
-    // import_prefix: _ => repeat1('.'),
-
-    // relative_import: $ => seq(
-    //   $.import_prefix,
-    //   optional($.dotted_name),
-    // ),
-
-    // future_import_statement: $ => seq(
-    //   'from',
-    //   '__future__',
-    //   'import',
-    //   choice(
-    //     $._import_list,
-    //     seq('(', $._import_list, ')'),
-    //   ),
-    // ),
-
-    // import_from_statement: $ => seq(
-    //   'from',
-    //   field('module_name', choice(
-    //     $.relative_import,
-    //     $.dotted_name,
-    //   )),
-    //   'import',
-    //   choice(
-    //     $.wildcard_import,
-    //     $._import_list,
-    //     seq('(', $._import_list, ')'),
-    //   ),
-    // ),
-
-    // _import_list: $ => seq(
-    //   commaSep1(field('name', choice(
-    //     $.dotted_name,
-    //     $.aliased_import,
-    //   ))),
-    //   optional(','),
-    // ),
-
-    // aliased_import: $ => seq(
-    //   field('name', $.dotted_name),
-    //   'as',
-    //   field('alias', $.identifier),
-    // ),
-
-    // wildcard_import: _ => '*',
 
     // print_statement: $ => choice(
     //   prec(1, seq(
@@ -514,11 +463,15 @@ module.exports = grammar({
       // a module is a list of vairables and functions intermixed
       repeat(choice(
         $.variable,
-
+        $.export,
+        $.import,
         $.function_definition
       )
       )
     ),
+    export: $ => seq("export", commaSep1($.identifier), $._newline),
+    _multiple_import: $ => seq("[", commaSep1($.identifier), "]"),
+    import: $ => seq("import", seq($.identifier, optional($._multiple_import)), $._newline),
     module: $ => seq("module", $.identifier),
     function_definition: $ => seq(
       'define',

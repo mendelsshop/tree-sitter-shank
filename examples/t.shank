@@ -1,7 +1,5 @@
-
-
-define bar(var v : string) {gg}
-constants bar = 10, has = false
-
-    TT 4, 5, var t, 7 
-    TT f
+import foo [fo, b]
+import bar
+export va, vg
+define bar(var v : string)
+    v := 6
