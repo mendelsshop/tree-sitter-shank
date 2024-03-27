@@ -465,10 +465,14 @@ module.exports = grammar({
         $.variable,
         $.export,
         $.import,
-        $.function_definition
+        $.function_definition,
+        $.enum,
+        $.record,
       )
       )
     ),
+    enum: $ => seq("enum", $.identifier, "=", "[", commaSep1($.identifier), "]"),
+    record: $ => seq("record", $.identifier, $._indent, repeat1(seq($.type, $.identifier, $._newline)), $._dedent),
     export: $ => seq("export", commaSep1($.identifier), $._newline),
     _multiple_import: $ => seq("[", commaSep1($.identifier), "]"),
     import: $ => seq("import", seq($.identifier, optional($._multiple_import)), $._newline),
@@ -477,7 +481,7 @@ module.exports = grammar({
       'define',
       field('name', $.identifier),
       field('parameters', $.parameters),
-      
+
       choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),

@@ -210,6 +210,21 @@
     }
   },
   {
+    "type": "enum",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
     "type": "export",
     "named": true,
     "fields": {},
@@ -472,6 +487,10 @@
       "required": false,
       "types": [
         {
+          "type": "enum",
+          "named": true
+        },
+        {
           "type": "export",
           "named": true
         },
@@ -488,7 +507,30 @@
           "named": true
         },
         {
+          "type": "record",
+          "named": true
+        },
+        {
           "type": "variable",
+          "named": true
+        }
+      ]
+    }
+  },
+  {
+    "type": "record",
+    "named": true,
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "identifier",
+          "named": true
+        },
+        {
+          "type": "type",
           "named": true
         }
       ]
@@ -671,6 +713,10 @@
     "named": false
   },
   {
+    "type": "enum",
+    "named": false
+  },
+  {
     "type": "export",
     "named": false
   },
@@ -720,6 +766,10 @@
   },
   {
     "type": "real",
+    "named": false
+  },
+  {
+    "type": "record",
     "named": false
   },
   {

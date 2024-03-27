@@ -1,5 +1,11 @@
 import foo [fo, b]
+enum color = [green, blue]
+record student
+	string name
+
+	string age
 import bar
 export va, vg
 define bar(var v : string)
-    v := 6
+    a := 5
+    
