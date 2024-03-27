@@ -7,5 +7,5 @@ record student
 import bar
 export va, vg
 define bar(var v : string)
-    a := 5
+    a.v := 5
     

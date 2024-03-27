@@ -47,7 +47,7 @@ module.exports = grammar({
   // ],
 
   conflicts: $ => [
-    [$.argument, $.primary_expression]
+    [$.argument, $.expression]
     //   [$.primary_expression, $.pattern],
     //   [$.primary_expression, $.list_splat_pattern],
     //   [$.tuple, $.tuple_pattern],
@@ -494,13 +494,15 @@ module.exports = grammar({
       ')',
     ),
 
-    assignment: $ => seq($.identifier, ":=", $.expression),
-    expression: $ => choice($.primary_expression),
+    // variable: $ => choice(seq($.identifier, ".", $.identifier), seq($.identifier, "[", $.expression, "]"), $.identifier),
+    variable: $ => $.identifier,
+    assignment: $ => seq($.variable_access, ":=", $.expression),
+    expression: $ => choice($.primary_expression, $.variable_access),
     statement: $ => choice($.call_statement, $.while_statement, $.for, $.if_then_statement, $.repeat_statement, $.assignment),
     repeat_statement: $ => seq("repeat", "until", $.expression, $.block),
     while_statement: $ => seq("while", $.expression, $.block),
     call_statement: $ => seq(field("function", $.identifier), optional(commaSep1($.argument))),
-    argument: $ => choice(seq(field("var", optional("var")), $.identifier), $.expression),
+    argument: $ => choice(seq(field("var", optional("var")), $.variable_access), $.expression),
     if_then_statement: $ => seq($.if, repeat($.elsif), optional($.else)),
     if: $ => seq("if", $.expression, $.expression),
     elsif: $ => seq("elsif", $.expression, $.block),
@@ -717,7 +719,7 @@ module.exports = grammar({
     primary_expression: $ => choice(
       //     $.await,
       //     $.binary_operator,
-      $.identifier,
+      // $.identifier,
       //     $.keyword_identifier,
       // $.string,
       //     $.concatenated_string,
@@ -1132,7 +1134,9 @@ module.exports = grammar({
       /{[^}]*(?:[^}][^}]*)*}[^\S\n]*/), $._newline
     ),
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
-
+    array_access: $ => seq($.identifier, "[", $.expression, "]"),
+    record_access: $ => seq($.identifier, ".", $.identifier),
+    variable_access: $ => choice($.array_access, $.record_access, $.identifier),
     //   keyword_identifier: $ => choice(
     //     prec(-3, alias(
     //       choice(
