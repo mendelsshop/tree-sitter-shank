@@ -47,7 +47,9 @@ module.exports = grammar({
   // ],
 
   conflicts: $ => [
-    [$.argument, $.expression]
+    [$.argument, $.primary_expression],
+    // [$.record_item, $.advanced_type]
+    // [$.advanced_type, $.record_item,]
     //   [$.primary_expression, $.pattern],
     //   [$.primary_expression, $.list_splat_pattern],
     //   [$.tuple, $.tuple_pattern],
@@ -472,7 +474,8 @@ module.exports = grammar({
       )
     ),
     enum: $ => seq("enum", $.identifier, "=", "[", commaSep1($.identifier), "]"),
-    record: $ => seq("record", $.identifier, $._indent, repeat1(seq($.type, $.identifier, $._newline)), $._dedent),
+    record_item: $ => seq($.type, $.identifier, $._newline),
+    record: $ => seq("record", $.identifier, $._indent, repeat1($.record_item), $._dedent),
     export: $ => seq("export", commaSep1($.identifier), $._newline),
     _multiple_import: $ => seq("[", commaSep1($.identifier), "]"),
     import: $ => seq("import", seq($.identifier, optional($._multiple_import)), $._newline),
@@ -494,10 +497,14 @@ module.exports = grammar({
       ')',
     ),
 
-    // variable: $ => choice(seq($.identifier, ".", $.identifier), seq($.identifier, "[", $.expression, "]"), $.identifier),
-    variable: $ => $.identifier,
     assignment: $ => seq($.variable_access, ":=", $.expression),
-    expression: $ => choice($.primary_expression, $.variable_access),
+    expression: $ => choice($.primary_expression,
+
+
+      $.comparison_operator,
+      $.not_operator,
+      $.boolean_operator,
+    ),
     statement: $ => choice($.call_statement, $.while_statement, $.for, $.if_then_statement, $.repeat_statement, $.assignment),
     repeat_statement: $ => seq("repeat", "until", $.expression, $.block),
     while_statement: $ => seq("while", $.expression, $.block),
@@ -718,8 +725,8 @@ module.exports = grammar({
 
     primary_expression: $ => choice(
       //     $.await,
-      //     $.binary_operator,
-      // $.identifier,
+      $.binary_operator,
+      $.variable_access,
       //     $.keyword_identifier,
       // $.string,
       //     $.concatenated_string,
@@ -739,81 +746,69 @@ module.exports = grammar({
       //     $.set,
       //     $.set_comprehension,
       //     $.tuple,
-      //     $.parenthesized_expression,
+      $.parenthesized_expression,
       //     $.generator_expression,
       //     $.ellipsis,
       //     alias($.list_splat_pattern, $.list_splat),
     ),
 
-    //   not_operator: $ => prec(PREC.not, seq(
-    //     'not',
-    //     field('argument', $.expression),
-    //   )),
+    not_operator: $ => prec(PREC.not, seq(
+      'not',
+      field('argument', $.expression),
+    )),
 
-    //   boolean_operator: $ => choice(
-    //     prec.left(PREC.and, seq(
-    //       field('left', $.expression),
-    //       field('operator', 'and'),
-    //       field('right', $.expression),
-    //     )),
-    //     prec.left(PREC.or, seq(
-    //       field('left', $.expression),
-    //       field('operator', 'or'),
-    //       field('right', $.expression),
-    //     )),
-    //   ),
+    boolean_operator: $ => choice(
+      prec.left(PREC.and, seq(
+        field('left', $.expression),
+        field('operator', 'and'),
+        field('right', $.expression),
+      )),
+      prec.left(PREC.or, seq(
+        field('left', $.expression),
+        field('operator', 'or'),
+        field('right', $.expression),
+      )),
+    ),
 
-    //   binary_operator: $ => {
-    //     const table = [
-    //       [prec.left, '+', PREC.plus],
-    //       [prec.left, '-', PREC.plus],
-    //       [prec.left, '*', PREC.times],
-    //       [prec.left, '@', PREC.times],
-    //       [prec.left, '/', PREC.times],
-    //       [prec.left, '%', PREC.times],
-    //       [prec.left, '//', PREC.times],
-    //       [prec.right, '**', PREC.power],
-    //       [prec.left, '|', PREC.bitwise_or],
-    //       [prec.left, '&', PREC.bitwise_and],
-    //       [prec.left, '^', PREC.xor],
-    //       [prec.left, '<<', PREC.shift],
-    //       [prec.left, '>>', PREC.shift],
-    //     ];
+    binary_operator: $ => {
+      const table = [
+        [prec.left, '+', PREC.plus],
+        [prec.left, '-', PREC.plus],
+        [prec.left, '*', PREC.times],
+        [prec.left, '/', PREC.times],
+        [prec.left, 'mod', PREC.times],
+        [prec.left, '//', PREC.times],
+      ];
 
-    //     // @ts-ignore
-    //     return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
-    //       field('left', $.primary_expression),
-    //       // @ts-ignore
-    //       field('operator', operator),
-    //       field('right', $.primary_expression),
-    //     ))));
-    //   },
+      // @ts-ignore
+      return choice(...table.map(([fn, operator, precedence]) => fn(precedence, seq(
+        field('left', $.primary_expression),
+        // @ts-ignore
+        field('operator', operator),
+        field('right', $.primary_expression),
+      ))));
+    },
 
     //   unary_operator: $ => prec(PREC.unary, seq(
     //     field('operator', choice('+', '-', '~')),
     //     field('argument', $.primary_expression),
     //   )),
 
-    //   comparison_operator: $ => prec.left(PREC.compare, seq(
-    //     $.primary_expression,
-    //     repeat1(seq(
-    //       field('operators',
-    //         choice(
-    //           '<',
-    //           '<=',
-    //           '==',
-    //           '!=',
-    //           '>=',
-    //           '>',
-    //           '<>',
-    //           'in',
-    //           alias(seq('not', 'in'), 'not in'),
-    //           'is',
-    //           alias(seq('is', 'not'), 'is not'),
-    //         )),
-    //       $.primary_expression,
-    //     )),
-    //   )),
+    comparison_operator: $ => prec.left(PREC.compare, seq(
+      $.primary_expression,
+      repeat1(seq(
+        field('operators',
+          choice(
+            '<',
+            '<=',
+            '=',
+            '>=',
+            '>',
+            '<>',
+          )),
+        $.primary_expression,
+      )),
+    )),
 
     //   lambda: $ => prec(PREC.lambda, seq(
     //     'lambda',
@@ -1016,11 +1011,11 @@ module.exports = grammar({
     //     )),
     //   ),
 
-    //   parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
-    //     '(',
-    //     choice($.expression, $.yield),
-    //     ')',
-    //   )),
+    parenthesized_expression: $ => prec(PREC.parenthesized_expression, seq(
+      '(',
+      $.expression,
+      ')',
+    )),
 
     //   _collection_elements: $ => seq(
     //     commaSep1(choice(
@@ -1127,8 +1122,9 @@ module.exports = grammar({
     array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),
     delclaration_array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
     declaration_type: $ => choice($.basic_type, $.delclaration_array_type),
-    type: $ => choice($.basic_type, $.array_type,),
+    advanced_type: $ => seq($.identifier, optional(seq(commaSep1($.identifier), optional(commaSep1($.basic_type))))),
 
+    type: $ => choice($.basic_type, $.array_type),
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
     comment: $ => seq(token(
       /{[^}]*(?:[^}][^}]*)*}[^\S\n]*/), $._newline
