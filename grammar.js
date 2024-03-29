@@ -1132,7 +1132,8 @@ module.exports = grammar({
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
     array_access: $ => seq($.identifier, "[", $.expression, "]"),
     record_access: $ => seq($.identifier, ".", $.identifier),
-    variable_access: $ => choice($.array_access, $.record_access, $.identifier),
+    variable_access: $ => seq($.identifier, repeat(choice(field("field_access", seq(".", $.identifier)), field("array_access", seq("[", $.expression, "]"))))),
+    // variable_access: $ => choice($.array_access, $.record_access, $.identifier),
     //   keyword_identifier: $ => choice(
     //     prec(-3, alias(
     //       choice(

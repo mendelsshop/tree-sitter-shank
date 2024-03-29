@@ -1,0 +1,4 @@
+
+define foo(var v : string)
+    a.v[4].a[6-7] := 5 + 6
+    
