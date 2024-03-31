@@ -48,6 +48,9 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.argument, $.primary_expression],
+    [$._custom_generic_instantiated_type, $._custom_generic_type, $._custom_type],
+    [$._custom_generic_instantiated_type, $._custom_generic_type],
+    // [$.record_item, $.advanced_type]
     // [$.record_item, $.advanced_type]
     // [$.advanced_type, $.record_item,]
     //   [$.primary_expression, $.pattern],
@@ -1118,13 +1121,22 @@ module.exports = grammar({
         seq(digits, '.', digits,),
       );
     },
-    basic_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer)))),
+    basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer)))),
+    // basis_type: $ => choice("integer","real", "string"),
     array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),
     delclaration_array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
-    declaration_type: $ => choice($.basic_type, $.delclaration_array_type),
-    advanced_type: $ => seq($.identifier, optional(seq(commaSep1($.identifier), optional(commaSep1($.basic_type))))),
+    declaration_type: $ => choice($.basis_type, $.delclaration_array_type),
+    _generic: $ => field("generic", $.identifier),
+    _generics: $ => commaSep1($._generic),
+    _type_name: $ => field("type_name", $.identifier),
+    _custom_type: $ => $._type_name,
+    _custom_generic_type: $ => seq($._type_name, $._generics),
+    // TODO: allow instiated types to be non basic
+    // TODO: asssert that length(generics) = length(instiated_genrics)
+    _custom_generic_instantiated_type: $ => seq($._type_name, $._generics, commaSep1(field("instatiated_generic", $.identifier))),
+    custom_type: $ => choice($._custom_generic_instantiated_type, $._custom_generic_type, $._custom_type),
 
-    type: $ => choice($.basic_type, $.array_type),
+    type: $ => choice($.basis_type, $.array_type, $.custom_type),
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
     comment: $ => seq(token(
       /{[^}]*(?:[^}][^}]*)*}[^\S\n]*/), $._newline
