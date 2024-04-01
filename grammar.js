@@ -473,6 +473,7 @@ module.exports = grammar({
         $.function_definition,
         $.enum,
         $.record,
+        $.test,
       )
       )
     ),
@@ -487,15 +488,27 @@ module.exports = grammar({
     module: $ => seq("module", $.identifier),
     function_definition: $ => seq(
       'define',
-      field('name', $.identifier),
-      field('parameters', $.parameters),
-      optional($.generics),
+      $._function_header,
       choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),
       $.block
     ),
 
+    _function_header: $ => seq(
+      field('name', $.identifier),
+      field('parameters', $.parameters),
+      optional($.generics),
+    ),
+
+    function_header: $ => $._function_header,
+    test: $ => seq("test", field("test_name", $.identifier), "for",
+      field("function", $.function_header),
+      choice($._newline, $.comment),
+      field("variables", repeat($.variable)),
+      field("constants", repeat($.constant)),
+      $.block
+    ),
     parameters: $ => seq(
       '(',
       optional($._parameters),

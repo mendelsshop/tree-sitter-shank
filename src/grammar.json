@@ -44,6 +44,10 @@
               {
                 "type": "SYMBOL",
                 "name": "record"
+              },
+              {
+                "type": "SYMBOL",
+                "name": "test"
               }
             ]
           }
@@ -343,6 +347,54 @@
           "value": "define"
         },
         {
+          "type": "SYMBOL",
+          "name": "_function_header"
+        },
+        {
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_newline"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "comment"
+            }
+          ]
+        },
+        {
+          "type": "FIELD",
+          "name": "variables",
+          "content": {
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "variable"
+            }
+          }
+        },
+        {
+          "type": "FIELD",
+          "name": "constants",
+          "content": {
+            "type": "REPEAT",
+            "content": {
+              "type": "SYMBOL",
+              "name": "constant"
+            }
+          }
+        },
+        {
+          "type": "SYMBOL",
+          "name": "block"
+        }
+      ]
+    },
+    "_function_header": {
+      "type": "SEQ",
+      "members": [
+        {
           "type": "FIELD",
           "name": "name",
           "content": {
@@ -369,6 +421,39 @@
               "type": "BLANK"
             }
           ]
+        }
+      ]
+    },
+    "function_header": {
+      "type": "SYMBOL",
+      "name": "_function_header"
+    },
+    "test": {
+      "type": "SEQ",
+      "members": [
+        {
+          "type": "STRING",
+          "value": "test"
+        },
+        {
+          "type": "FIELD",
+          "name": "test_name",
+          "content": {
+            "type": "SYMBOL",
+            "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": "for"
+        },
+        {
+          "type": "FIELD",
+          "name": "function",
+          "content": {
+            "type": "SYMBOL",
+            "name": "function_header"
+          }
         },
         {
           "type": "CHOICE",

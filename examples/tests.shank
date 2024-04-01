@@ -1,0 +1,7 @@
+define someFunction(x : integer; var y : integer)
+	y := x
+
+test someFunctionWorks for someFunction(x : integer; var y : integer)
+variables t : integer
+	someFunction 5, var t 
+	assertIsEqual 7, t 
