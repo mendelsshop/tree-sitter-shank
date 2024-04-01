@@ -476,9 +476,11 @@ module.exports = grammar({
       )
       )
     ),
+    generics: $ => seq("generics", commaSep1(field("generic", $.identifier)), choice($.comment, $._newline)),
+
     enum: $ => seq("enum", $.identifier, "=", "[", commaSep1($.identifier), "]"),
     record_item: $ => seq($.type, $.identifier, $._newline),
-    record: $ => seq("record", $.identifier, $._indent, repeat1($.record_item), $._dedent),
+    record: $ => seq("record", $.identifier, optional($.generics), $._indent, repeat1($.record_item), $._dedent),
     export: $ => seq("export", commaSep1($.identifier), $._newline),
     _multiple_import: $ => seq("[", commaSep1($.identifier), "]"),
     import: $ => seq("import", seq($.identifier, optional($._multiple_import)), $._newline),
@@ -487,7 +489,7 @@ module.exports = grammar({
       'define',
       field('name', $.identifier),
       field('parameters', $.parameters),
-
+      optional($.generics),
       choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),
@@ -502,8 +504,6 @@ module.exports = grammar({
 
     assignment: $ => seq($.variable_access, ":=", $.expression),
     expression: $ => choice($.primary_expression,
-
-
       $.comparison_operator,
       $.not_operator,
       $.boolean_operator,
@@ -630,7 +630,7 @@ module.exports = grammar({
     //   // Patterns
 
     _parameters: $ => seq(
-      semicolorSep1($.parameter),
+      semicolonSep1($.parameter),
     ),
 
     //   _patterns: $ => seq(
@@ -644,7 +644,7 @@ module.exports = grammar({
       commaSep1($.identifier),
       ":",
       $.type,
-      choice($.comment, $._newline),
+      // choice($.comment, $._newline),
     ),
 
     variable: $ => seq(
@@ -1125,7 +1125,8 @@ module.exports = grammar({
     // basis_type: $ => choice("integer","real", "string"),
     array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),
     delclaration_array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
-    declaration_type: $ => choice($.basis_type, $.delclaration_array_type),
+    // TODO: dont have declaration and non declaration tpyes
+    declaration_type: $ => choice($.basis_type, $.delclaration_array_type, $.custom_type),
     _generic: $ => field("generic", $.identifier),
     _generics: $ => commaSep1($._generic),
     _type_name: $ => field("type_name", $.identifier),
@@ -1192,8 +1193,8 @@ function commaSep1(rule) {
   return sep1(rule, ',');
 }
 
-function semicolorSep1(rule) {
-  return sep1(rule, ',');
+function semicolonSep1(rule) {
+  return sep1(rule, ';');
 }
 /**
  * Creates a rule to match one or more occurrences of `rule` separated by `sep`
