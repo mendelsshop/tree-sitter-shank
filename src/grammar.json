@@ -1738,20 +1738,45 @@
         }
       ]
     },
+    "refersTo": {
+      "type": "STRING",
+      "value": "refersTo"
+    },
     "custom_type": {
-      "type": "CHOICE",
+      "type": "SEQ",
       "members": [
         {
-          "type": "SYMBOL",
-          "name": "_custom_generic_instantiated_type"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "FIELD",
+              "name": "reference",
+              "content": {
+                "type": "SYMBOL",
+                "name": "refersTo"
+              }
+            },
+            {
+              "type": "BLANK"
+            }
+          ]
         },
         {
-          "type": "SYMBOL",
-          "name": "_custom_generic_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "_custom_type"
+          "type": "CHOICE",
+          "members": [
+            {
+              "type": "SYMBOL",
+              "name": "_custom_generic_instantiated_type"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_custom_generic_type"
+            },
+            {
+              "type": "SYMBOL",
+              "name": "_custom_type"
+            }
+          ]
         }
       ]
     },

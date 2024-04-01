@@ -1135,7 +1135,8 @@ module.exports = grammar({
     // TODO: allow instiated types to be non basic
     // TODO: asssert that length(generics) = length(instiated_genrics)
     _custom_generic_instantiated_type: $ => seq($._type_name, $._generics, commaSep1(field("instatiated_generic", $.identifier))),
-    custom_type: $ => choice($._custom_generic_instantiated_type, $._custom_generic_type, $._custom_type),
+    refersTo: _ => 'refersTo',
+    custom_type: $ => seq(optional(field("reference", $.refersTo)), choice($._custom_generic_instantiated_type, $._custom_generic_type, $._custom_type)),
 
     type: $ => choice($.basis_type, $.array_type, $.custom_type),
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890

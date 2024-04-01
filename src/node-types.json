@@ -307,6 +307,16 @@
           }
         ]
       },
+      "reference": {
+        "multiple": false,
+        "required": false,
+        "types": [
+          {
+            "type": "refersTo",
+            "named": true
+          }
+        ]
+      },
       "type_name": {
         "multiple": false,
         "required": true,
@@ -1173,6 +1183,10 @@
   {
     "type": "record",
     "named": false
+  },
+  {
+    "type": "refersTo",
+    "named": true
   },
   {
     "type": "repeat",
