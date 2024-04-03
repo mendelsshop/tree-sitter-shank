@@ -757,6 +757,10 @@
           "named": true
         },
         {
+          "type": "character",
+          "named": true
+        },
+        {
           "type": "false",
           "named": true
         },
@@ -770,6 +774,10 @@
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "string",
           "named": true
         },
         {
@@ -791,6 +799,10 @@
       "multiple": true,
       "required": false,
       "types": [
+        {
+          "type": "constant",
+          "named": true
+        },
         {
           "type": "enum",
           "named": true
@@ -1193,6 +1205,10 @@
     "named": false
   },
   {
+    "type": "character",
+    "named": true
+  },
+  {
     "type": "constants",
     "named": false
   },
@@ -1250,11 +1266,11 @@
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "mod",
@@ -1291,6 +1307,10 @@
   {
     "type": "repeat",
     "named": false
+  },
+  {
+    "type": "string",
+    "named": true
   },
   {
     "type": "string",

@@ -468,6 +468,7 @@ module.exports = grammar({
       // a module is a list of vairables and functions intermixed
       repeat(choice(
         $.variable,
+        $.constant,
         $.export,
         $.import,
         $.function_definition,
@@ -744,8 +745,8 @@ module.exports = grammar({
       $.binary_operator,
       $.variable_access,
       //     $.keyword_identifier,
-      // $.string,
-      //     $.concatenated_string,
+      $.string,
+      $.character,
       $.integer,
       $.float,
       $.true,
@@ -1134,6 +1135,10 @@ module.exports = grammar({
         seq(digits, '.', digits,),
       );
     },
+    // TODO: escape sequences
+    string: _ => token(seq('\"', repeat(/[^\\"]/), '\"')),
+    character: _ => token(seq('\'', /[^\\']/, '\'')),
+
     basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer)))),
     // basis_type: $ => choice("integer","real", "string"),
     array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),

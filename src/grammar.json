@@ -27,6 +27,10 @@
               },
               {
                 "type": "SYMBOL",
+                "name": "constant"
+              },
+              {
+                "type": "SYMBOL",
                 "name": "export"
               },
               {
@@ -1064,6 +1068,14 @@
         },
         {
           "type": "SYMBOL",
+          "name": "string"
+        },
+        {
+          "type": "SYMBOL",
+          "name": "character"
+        },
+        {
+          "type": "SYMBOL",
           "name": "integer"
         },
         {
@@ -1490,6 +1502,49 @@
               "type": "PATTERN",
               "value": "[0-9]+_?"
             }
+          }
+        ]
+      }
+    },
+    "string": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "\""
+          },
+          {
+            "type": "REPEAT",
+            "content": {
+              "type": "PATTERN",
+              "value": "[^\\\\\"]"
+            }
+          },
+          {
+            "type": "STRING",
+            "value": "\""
+          }
+        ]
+      }
+    },
+    "character": {
+      "type": "TOKEN",
+      "content": {
+        "type": "SEQ",
+        "members": [
+          {
+            "type": "STRING",
+            "value": "'"
+          },
+          {
+            "type": "PATTERN",
+            "value": "[^\\\\']"
+          },
+          {
+            "type": "STRING",
+            "value": "'"
           }
         ]
       }

@@ -1,0 +1,3 @@
+constants bar = "baz"
+define foo()
+	foo := "bar"
