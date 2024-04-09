@@ -28,6 +28,7 @@
 
 # Example dirs
 /examples/*/
+/results/
 
 # Grammar volatiles
 dsl.d.ts

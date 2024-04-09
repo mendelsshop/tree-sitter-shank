@@ -1,0 +1,8 @@
+define bag()
+	if x = 5 then
+		a
+	elsif v = c then
+		b := 7
+	else
+		y { commeny}
+	else y
