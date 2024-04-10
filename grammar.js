@@ -139,19 +139,17 @@ module.exports = grammar({
       )
       )
     ),
-    generics: $ => seq("generics", commaSep1(field("generic", $.identifier)), choice($.comment, $._newline)),
-
-    enum: $ => seq("enum", field("name", $.identifier), "=", "[", commaSep1(field("name", $.identifier)), "]"),
-    record_item: $ => seq($.type, field("name", $.identifier), $._newline),
+    generics: $ => seq("generics", commaSep1(field("generic", $.identifier)), $._end_line),
+    enum: $ => seq("enum", field("name", $.identifier), "=", "[", commaSep1(field("variant", $.identifier)), "]"),
+    record_item: $ => seq(field("type", $.type), field("name", $.identifier), $._end_line),
     record: $ => seq("record", field("name", $.identifier), optional($.generics), $._indent, repeat1(field("field", $.record_item)), $._dedent),
-    export: $ => seq("export", commaSep1($.identifier), $._newline),
-    _multiple_import: $ => seq("[", commaSep1($.identifier), "]"),
-    import: $ => seq("import", seq(field("name", $.identifier), optional($._multiple_import)), $._newline),
+    export: $ => seq("export", commaSep1(field("name", $.identifier)), $._end_line),
+    imports: $ => seq("[", commaSep1(field("name", $.identifier)), "]"),
+    import: $ => seq("import", seq(field("module", $.identifier), optional(field("imports", $.imports))), $._end_line),
     module: $ => seq("module", field("name", $.identifier)),
     function_definition: $ => seq(
       'define',
       $._function_header,
-      choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),
       $.block
@@ -160,13 +158,12 @@ module.exports = grammar({
     _function_header: $ => seq(
       field('name', $.identifier),
       field('parameters', $.parameters),
-      optional($.generics),
+      choice($.generics, $._end_line),
     ),
 
     function_header: $ => $._function_header,
     test: $ => seq("test", field("name", $.identifier), "for",
       field("function", $.function_header),
-      choice($._newline, $.comment),
       field("variables", repeat($.variable)),
       field("constants", repeat($.constant)),
       $.block
@@ -177,7 +174,7 @@ module.exports = grammar({
       ')',
     ),
 
-    call_statement: $ => seq(field("function", $.identifier), optional(commaSep1($.argument))),
+    call_statement: $ => seq(field("function", $.identifier), field("arguements", optional(commaSep1($.argument)))),
     assignment: $ => seq(field("left", $.variable_access), ":=", field("right", $.expression)),
     expression: $ => choice($.primary_expression,
       $.comparison_operator,
@@ -193,9 +190,10 @@ module.exports = grammar({
     elsif: $ => seq('elsif', field("condition", $.expression), 'then', field("consequent", $.block)),
     else: $ => seq('else', field("body", $.block)),
 
-    for: $ => seq("for", $.identifier, "from", $.integer, "to", $.integer, $.block),
+    range: $ => seq("from", field("start", $.integer), "to", field("end", $.integer)),
+    for: $ => seq("for", field("control", $.identifier), field("range", $.range), $.block),
 
-    constant: $ => seq("constants", commaSep1(seq($.identifier, "=", $.primary_expression))),
+    constant: $ => seq("constants", commaSep1(seq(field("name", $.identifier), "=", field("value", $.primary_expression)))),
     block: $ => seq(
       $._indent,
       repeat(choice($._simple_statement, $._compound_statement)),
@@ -210,18 +208,18 @@ module.exports = grammar({
     var: _ => "var",
     parameter: $ => seq(
       optional($.var),
-      commaSep1($.identifier),
+      field("name", commaSep1($.identifier)),
       ":",
-      $.type,
-      // choice($.comment, $._newline),
+      field("type", $.type),
+      $._end_line
     ),
 
     variable: $ => seq(
       "variables",
-      commaSep1($.identifier),
+      commaSep1(field("name", $.identifier)),
       ":",
-      $.declaration_type,
-      choice($.comment, $._newline),
+      field("type", $.declaration_type),
+      $._end_line
     ),
 
     primary_expression: $ => choice(
@@ -343,7 +341,7 @@ module.exports = grammar({
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
     array_access: $ => seq($.identifier, "[", $.expression, "]"),
     record_access: $ => seq($.identifier, ".", $.identifier),
-    variable_access: $ => seq($.identifier, repeat(choice(field("field_acces", seq(".", $.identifier)), field("array_access", seq("[", $.expression, "]"))))),
+    variable_access: $ => seq($.identifier, repeat(choice(field("field_acces", seq(".", field("field", $.identifier))), field("array_access", seq("[", field("index", $.expression), "]"))))),
     // variable_access: $ => choice($.array_access, $.record_access, $.identifier),
 
     true: _ => 'true',
