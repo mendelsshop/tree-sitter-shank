@@ -1,7 +1,7 @@
-record Node generics T
+record Node generic T
 	T data
 	refersTo Node T next
 
-define new(data: T; var output: refersTo LinkedList T) generics T
+define new(data: T; var output: refersTo LinkedList T) generic T
 	allocateMemory output
 	output.data := data

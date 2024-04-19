@@ -1,21 +1,21 @@
-record LinkedList generics T
+record LinkedList generic T
 	Node T root
 
-record Node generics T
+record Node generic T
 	T data
 	Node T next
 
-define add(var linkedlist: LinkedList T; value: T) generics T
+define add(var linkedlist: LinkedList T; value: T) generic T
 variables node : Node T
 	createNode var node, value
 	node.next := linkedlist.node
 	linkedlist.node := node
 
-record AssociativeList generics K, V
+record AssociativeList generic K, V
 	K key
 	V value
 	AssociativeList K, V next
 
-define add(var root: AssociativeList K, V; node : AssociativeList K, V) generics K, V
+define add(var root: AssociativeList K, V; node : AssociativeList K, V) generic K, V
 	node.next := root.next
 	root.next := node

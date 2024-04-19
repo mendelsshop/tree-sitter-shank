@@ -63,7 +63,7 @@
       "members": [
         {
           "type": "STRING",
-          "value": "generics"
+          "value": "generic"
         },
         {
           "type": "SEQ",
