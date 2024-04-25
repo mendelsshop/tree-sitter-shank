@@ -331,16 +331,6 @@
           }
         ]
       },
-      "instatiated_generic": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "identifier",
-            "named": true
-          }
-        ]
-      },
       "reference": {
         "multiple": false,
         "required": false,
