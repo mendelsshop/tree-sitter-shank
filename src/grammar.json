@@ -1130,6 +1130,23 @@
           }
         },
         {
+          "type": "FIELD",
+          "name": "default_value",
+          "content": {
+            "type": "SEQ",
+            "members": [
+              {
+                "type": "STRING",
+                "value": "="
+              },
+              {
+                "type": "SYMBOL",
+                "name": "primary_expression"
+              }
+            ]
+          }
+        },
+        {
           "type": "SYMBOL",
           "name": "_end_line"
         }

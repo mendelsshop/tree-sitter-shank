@@ -1,0 +1,2 @@
+define foo(foo : int = 5)
+    print foo

@@ -210,6 +210,8 @@ module.exports = grammar({
       field("name", commaSep1($.identifier)),
       ":",
       field("type", $.type),
+      field("default_value", seq("=", $.primary_expression)),
+      // TODO: should this be optional
       $._end_line
     ),
 
