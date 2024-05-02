@@ -1,2 +1,2 @@
-define foo(foo : int = 5)
+define foo(ggfoo : integer = 5; g: integer)
     print foo

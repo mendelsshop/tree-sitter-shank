@@ -808,7 +808,7 @@
     "fields": {
       "default_value": {
         "multiple": true,
-        "required": true,
+        "required": false,
         "types": [
           {
             "type": "=",
