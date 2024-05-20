@@ -1,9 +1,9 @@
 record LinkedList generic T
-	Node T root
+	root: Node T
 
 record Node generic T
-	T data
-	Node T next
+	data: T
+	next: Node T
 
 define add(var linkedlist: LinkedList T; value: T) generic T
 variables node : Node T
@@ -12,8 +12,8 @@ variables node : Node T
 	linkedlist.node := node
 
 record AssociativeList generic K, V
-	K key
-	V value
+	key: K
+	value: V
 	AssociativeList K, V next
 
 define add(var root: AssociativeList K, V; node : AssociativeList K, V) generic K, V

@@ -1,2 +1,4 @@
 define foo(ggfoo : integer = 5; g: integer)
+variables f: int
     print foo
+

@@ -171,18 +171,22 @@
       "members": [
         {
           "type": "FIELD",
-          "name": "type",
-          "content": {
-            "type": "SYMBOL",
-            "name": "type"
-          }
-        },
-        {
-          "type": "FIELD",
           "name": "name",
           "content": {
             "type": "SYMBOL",
             "name": "identifier"
+          }
+        },
+        {
+          "type": "STRING",
+          "value": ":"
+        },
+        {
+          "type": "FIELD",
+          "name": "type",
+          "content": {
+            "type": "SYMBOL",
+            "name": "type"
           }
         },
         {
@@ -2170,10 +2174,6 @@
     [
       "argument",
       "primary_expression"
-    ],
-    [
-      "_custom_generic_type",
-      "_custom_type"
     ]
   ],
   "precedences": [],

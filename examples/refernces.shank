@@ -1,6 +1,6 @@
 record Node generic T
-	T data
-	refersTo Node T next
+	data: T
+	next: refersTo Node T
 
 define new(data: T; var output: refersTo LinkedList T) generic T
 	allocateMemory output

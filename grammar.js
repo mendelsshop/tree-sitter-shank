@@ -39,7 +39,7 @@ module.exports = grammar({
 
   conflicts: $ => [
     [$.argument, $.primary_expression],
-    [$._custom_generic_type, $._custom_type],
+    // [$._custom_generic_type, $._custom_type],
     // [$.record_item, $.advanced_type]
     // [$.record_item, $.advanced_type]
     // [$.advanced_type, $.record_item,]
@@ -140,7 +140,7 @@ module.exports = grammar({
     ),
     generics: $ => seq("generic", commaSep1(field("generic", $.identifier)), $._end_line),
     enum: $ => seq("enum", field("name", $.identifier), "=", "[", commaSep1(field("variant", $.identifier)), "]"),
-    record_item: $ => seq(field("type", $.type), field("name", $.identifier), $._end_line),
+    record_item: $ => seq(field("name", $.identifier), ":", field("type", $.type), $._end_line),
     record: $ => seq("record", field("name", $.identifier), optional($.generics), $._indent, repeat1(field("field", $.record_item)), $._dedent),
     export: $ => seq("export", commaSep1(field("name", $.identifier)), $._end_line),
     imports: $ => seq("[", commaSep1(field("name", $.identifier)), "]"),
