@@ -1213,7 +1213,7 @@
           "name": "type",
           "content": {
             "type": "SYMBOL",
-            "name": "declaration_type"
+            "name": "type"
           }
         },
         {
@@ -1799,44 +1799,52 @@
               ]
             }
           ]
+        },
+        {
+          "type": "SEQ",
+          "members": [
+            {
+              "type": "STRING",
+              "value": "character"
+            },
+            {
+              "type": "CHOICE",
+              "members": [
+                {
+                  "type": "SEQ",
+                  "members": [
+                    {
+                      "type": "STRING",
+                      "value": "from"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "integer"
+                    },
+                    {
+                      "type": "STRING",
+                      "value": "to"
+                    },
+                    {
+                      "type": "SYMBOL",
+                      "name": "integer"
+                    }
+                  ]
+                },
+                {
+                  "type": "BLANK"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "STRING",
+          "value": "boolean"
         }
       ]
     },
     "array_type": {
-      "type": "SEQ",
-      "members": [
-        {
-          "type": "STRING",
-          "value": "array"
-        },
-        {
-          "type": "STRING",
-          "value": "of"
-        },
-        {
-          "type": "CHOICE",
-          "members": [
-            {
-              "type": "STRING",
-              "value": "string"
-            },
-            {
-              "type": "STRING",
-              "value": "integer"
-            },
-            {
-              "type": "STRING",
-              "value": "real"
-            },
-            {
-              "type": "STRING",
-              "value": "boolean"
-            }
-          ]
-        }
-      ]
-    },
-    "delclaration_array_type": {
       "type": "SEQ",
       "members": [
         {
@@ -1888,23 +1896,6 @@
               "value": "boolean"
             }
           ]
-        }
-      ]
-    },
-    "declaration_type": {
-      "type": "CHOICE",
-      "members": [
-        {
-          "type": "SYMBOL",
-          "name": "basis_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "delclaration_array_type"
-        },
-        {
-          "type": "SYMBOL",
-          "name": "custom_type"
         }
       ]
     },

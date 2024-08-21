@@ -219,7 +219,7 @@ module.exports = grammar({
       "variables",
       commaSep1(field("name", $.identifier)),
       ":",
-      field("type", $.declaration_type),
+      field("type", $.type),
       $._end_line
     ),
 
@@ -317,17 +317,14 @@ module.exports = grammar({
     string: _ => token(seq('\"', repeat(/[^\\"]/), '\"')),
     character: _ => token(seq('\'', /[^\\']/, '\'')),
 
-    basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer)))),
-    // basis_type: $ => choice("integer","real", "string"),
-    array_type: $ => seq("array", "of", choice("string", "integer", "real", "boolean")),
-    delclaration_array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
-    // TODO: dont have declaration and non declaration tpyes
-    declaration_type: $ => choice($.basis_type, $.delclaration_array_type, $.custom_type),
+    basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
+    array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
     _generic: $ => field("generic", $.identifier),
     _generics: $ => commaSep1($._generic),
     _type_name: $ => field("type_name", $.identifier),
     _custom_type: $ => $._type_name,
-    // TODO: should generics be able to be instiated with fancy custom types
+    // TODO: complex generics
+    // generics be able to be instiated with fancy custom types
     _custom_generic_type: $ => seq($._type_name, $._generics),
     refersTo: _ => 'refersTo',
     custom_type: $ => seq(optional(field("reference", $.refersTo)), choice($._custom_generic_type, $._custom_type)),
@@ -345,9 +342,6 @@ module.exports = grammar({
 
     true: _ => 'true',
     false: _ => 'false',
-    // TODO: null
-    // none: _ => 'None',
-
   },
 });
 
