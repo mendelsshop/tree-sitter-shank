@@ -318,8 +318,8 @@ module.exports = grammar({
     character: _ => token(seq('\'', /[^\\']/, '\'')),
 
     basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
-    array_type: $ => seq("array", type_constraint($.integer), "of", choice("string", "integer", "real", "boolean")),
-    _generic: $ => field("generic", $.identifier),
+    array_type: $ => seq("array", type_constraint($.integer), "of", $.type),
+    _generic: $ => field("generic", $.type),
     _generics: $ => commaSep1($._generic),
     _type_name: $ => field("type_name", $.identifier),
     _custom_type: $ => $._type_name,
