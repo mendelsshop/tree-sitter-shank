@@ -318,9 +318,9 @@ module.exports = grammar({
     character: _ => token(seq('\'', /[^\\']/, '\'')),
 
     basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
-    array_type: $ => seq("array", type_constraint($.integer), "of", $.type),
+    array_type: $ => seq("array",type_constraint( $.integer), "of", $.type),
     _generic: $ => field("generic", $.type),
-    _generics: $ => commaSep1($._generic),
+    _generics: $ =>  prec.left(commaSep1($._generic)),
     _type_name: $ => field("type_name", $.identifier),
     _custom_type: $ => $._type_name,
     // TODO: complex generics
@@ -331,7 +331,7 @@ module.exports = grammar({
     type: $ => choice($.basis_type, $.array_type, $.custom_type),
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
     comment: $ => seq(token(
-      /{[^}]*(?:[^}][^}]*)*}[^\S\n]*/), $._newline
+      /\{[^}]*(?:[^}][^}]*)*\}[^\S\n]*/), $._newline
     ),
     _end_line: $ => choice($.comment, $._newline),
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,

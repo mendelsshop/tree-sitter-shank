@@ -32,7 +32,21 @@
   {
     "type": "array_type",
     "named": true,
-    "fields": {}
+    "fields": {},
+    "children": {
+      "multiple": true,
+      "required": true,
+      "types": [
+        {
+          "type": "integer",
+          "named": true
+        },
+        {
+          "type": "type",
+          "named": true
+        }
+      ]
+    }
   },
   {
     "type": "assignment",
@@ -326,7 +340,7 @@
         "required": false,
         "types": [
           {
-            "type": "identifier",
+            "type": "type",
             "named": true
           }
         ]
@@ -351,44 +365,6 @@
           }
         ]
       }
-    }
-  },
-  {
-    "type": "declaration_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": false,
-      "required": true,
-      "types": [
-        {
-          "type": "basis_type",
-          "named": true
-        },
-        {
-          "type": "custom_type",
-          "named": true
-        },
-        {
-          "type": "delclaration_array_type",
-          "named": true
-        }
-      ]
-    }
-  },
-  {
-    "type": "delclaration_array_type",
-    "named": true,
-    "fields": {},
-    "children": {
-      "multiple": true,
-      "required": true,
-      "types": [
-        {
-          "type": "integer",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1211,7 +1187,7 @@
         "required": true,
         "types": [
           {
-            "type": "declaration_type",
+            "type": "type",
             "named": true
           }
         ]
@@ -1404,6 +1380,10 @@
   },
   {
     "type": "character",
+    "named": false
+  },
+  {
+    "type": "character",
     "named": true
   },
   {
@@ -1464,11 +1444,11 @@
   },
   {
     "type": "integer",
-    "named": false
+    "named": true
   },
   {
     "type": "integer",
-    "named": true
+    "named": false
   },
   {
     "type": "mod",
