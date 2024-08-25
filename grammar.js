@@ -318,17 +318,18 @@ module.exports = grammar({
     character: _ => token(seq('\'', /[^\\']/, '\'')),
 
     basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
-    array_type: $ => seq("array",type_constraint( $.integer), "of", $.type),
-    _generic: $ => field("generic", $.type),
-    _generics: $ =>  prec.left(commaSep1($._generic)),
+    array_type: $ => seq("array", type_constraint($.integer), "of", $.type),
+    _generic: $ => field("generic", choice($.basis_type, seq(optional(field("reference", $.refersTo)), choice($.array_type, $._custom_type)))),
+    _generics: $ => commaSep1($._generic),
     _type_name: $ => field("type_name", $.identifier),
     _custom_type: $ => $._type_name,
     // TODO: complex generics
     // generics be able to be instiated with fancy custom types
     _custom_generic_type: $ => seq($._type_name, $._generics),
     refersTo: _ => 'refersTo',
-    custom_type: $ => seq(optional(field("reference", $.refersTo)), choice($._custom_generic_type, $._custom_type)),
-    type: $ => choice($.basis_type, $.array_type, $.custom_type),
+    custom_type: $ => choice($._custom_generic_type, $._custom_type),
+    reference_type: $ => seq(field("reference", $.refersTo), choice($.custom_type, $.array_type)),
+    type: $ => choice($.basis_type, $.array_type, $.custom_type, $.reference_type),
     // http://stackoverflow.com/questions/13014947/regex-to-match-a-c-style-multiline-comment/36328890#36328890
     comment: $ => seq(token(
       /\{[^}]*(?:[^}][^}]*)*\}[^\S\n]*/), $._newline
