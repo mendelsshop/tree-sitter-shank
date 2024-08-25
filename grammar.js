@@ -319,12 +319,13 @@ module.exports = grammar({
 
     basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
     array_type: $ => seq("array", type_constraint($.integer), "of", $.type),
-    _generic: $ => field("generic", choice($.basis_type, seq(optional(field("reference", $.refersTo)), choice($.array_type, $._custom_type)))),
+    // TODO: do we want simple array types allowed to be used as part of generics without parenthesis
+    _generic: $ => field("generic", choice($.basis_type, alias($.simple_reference_type, $.reference_type), alias($.simple_custom_type, $.custom_type), paren($.type))),
+    simple_custom_type: $ => $._custom_type,
+    simple_reference_type: $ => seq(field("reference", $.refersTo), alias($.simple_custom_type, $.custom_type)),
     _generics: $ => commaSep1($._generic),
     _type_name: $ => field("type_name", $.identifier),
     _custom_type: $ => $._type_name,
-    // TODO: complex generics
-    // generics be able to be instiated with fancy custom types
     _custom_generic_type: $ => seq($._type_name, $._generics),
     refersTo: _ => 'refersTo',
     custom_type: $ => choice($._custom_generic_type, $._custom_type),
@@ -378,5 +379,9 @@ function sep1(rule, separator) {
 }
 
 function type_constraint(constraint_type) {
-  return seq("from", constraint_type, "to", constraint_type);
+  return seq("from", field("from", constraint_type), "to", field("to", constraint_type));
+}
+
+function paren(item) {
+  return seq("(", item, ")")
 }

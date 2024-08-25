@@ -1,0 +1,8 @@
+define main(v: LinkedList refersTo integer)
+	pass
+
+
+define main2(v: LinkedList (refersTo array from 0 to 10 of integer))
+	pass
+define main(v: refersTo LinkedList refersTo integer;  v: LinkedList foo, (array from 0 to 10 of bar))
+	pass
