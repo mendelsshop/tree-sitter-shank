@@ -95,8 +95,7 @@ module.exports = grammar({
     function_definition: $ => seq(
       'define',
       $._function_header,
-      field("variables", repeat($.variable)),
-      field("constants", repeat($.constant)),
+      repeat(choice($.constant, $.variable)),
       $.block
     ),
 
@@ -109,8 +108,7 @@ module.exports = grammar({
     function_header: $ => $._function_header,
     test: $ => seq("test", field("name", $.identifier), "for",
       field("function", $.function_header),
-      field("variables", repeat($.variable)),
-      field("constants", repeat($.constant)),
+      repeat(choice($.constant, $.variable)),
       $.block
     ),
     parameters: $ => seq(

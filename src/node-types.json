@@ -556,16 +556,6 @@
     "type": "function_definition",
     "named": true,
     "fields": {
-      "constants": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "constant",
-            "named": true
-          }
-        ]
-      },
       "name": {
         "multiple": false,
         "required": true,
@@ -585,16 +575,6 @@
             "named": true
           }
         ]
-      },
-      "variables": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "variable",
-            "named": true
-          }
-        ]
       }
     },
     "children": {
@@ -606,7 +586,15 @@
           "named": true
         },
         {
+          "type": "constant",
+          "named": true
+        },
+        {
           "type": "generics",
+          "named": true
+        },
+        {
+          "type": "variable",
           "named": true
         }
       ]
@@ -1105,16 +1093,6 @@
     "type": "test",
     "named": true,
     "fields": {
-      "constants": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "constant",
-            "named": true
-          }
-        ]
-      },
       "function": {
         "multiple": false,
         "required": true,
@@ -1134,24 +1112,22 @@
             "named": true
           }
         ]
-      },
-      "variables": {
-        "multiple": true,
-        "required": false,
-        "types": [
-          {
-            "type": "variable",
-            "named": true
-          }
-        ]
       }
     },
     "children": {
-      "multiple": false,
+      "multiple": true,
       "required": true,
       "types": [
         {
           "type": "block",
+          "named": true
+        },
+        {
+          "type": "constant",
+          "named": true
+        },
+        {
+          "type": "variable",
           "named": true
         }
       ]
