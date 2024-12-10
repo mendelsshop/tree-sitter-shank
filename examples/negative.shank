@@ -1,0 +1,8 @@
+{ constants y = -1.0 }
+define start() generic F { constants y = -1.0 }
+constants x = -1 { constants y = -1.0 }
+constants y = -1.0
+	write x { x fff }
+	write  x
+
+{ constants y = -1.0 }

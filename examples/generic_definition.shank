@@ -14,7 +14,7 @@ variables node : Node T
 record AssociativeList generic K, V
 	key: K
 	value: V
-	AssociativeList K, V next
+	next: AssociativeList K, V
 
 define add(var root: AssociativeList K, V; node : AssociativeList K, V) generic K, V
 	node.next := root.next

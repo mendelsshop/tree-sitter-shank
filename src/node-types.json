@@ -100,11 +100,11 @@
         "required": false,
         "types": [
           {
-            "type": "float",
+            "type": "integer",
             "named": true
           },
           {
-            "type": "integer",
+            "type": "real",
             "named": true
           }
         ]
@@ -114,11 +114,11 @@
         "required": false,
         "types": [
           {
-            "type": "float",
+            "type": "integer",
             "named": true
           },
           {
-            "type": "integer",
+            "type": "real",
             "named": true
           }
         ]
@@ -191,10 +191,6 @@
         },
         {
           "type": "call_statement",
-          "named": true
-        },
-        {
-          "type": "comment",
           "named": true
         },
         {
@@ -491,16 +487,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -620,10 +606,6 @@
           "named": true
         },
         {
-          "type": "comment",
-          "named": true
-        },
-        {
           "type": "generics",
           "named": true
         }
@@ -660,10 +642,6 @@
       "required": false,
       "types": [
         {
-          "type": "comment",
-          "named": true
-        },
-        {
           "type": "generics",
           "named": true
         }
@@ -684,16 +662,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -760,16 +728,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -864,13 +822,9 @@
       }
     },
     "children": {
-      "multiple": true,
+      "multiple": false,
       "required": false,
       "types": [
-        {
-          "type": "comment",
-          "named": true
-        },
         {
           "type": "var",
           "named": true
@@ -929,15 +883,15 @@
           "named": true
         },
         {
-          "type": "float",
-          "named": true
-        },
-        {
           "type": "integer",
           "named": true
         },
         {
           "type": "parenthesized_expression",
+          "named": true
+        },
+        {
+          "type": "real",
           "named": true
         },
         {
@@ -958,6 +912,7 @@
   {
     "type": "program",
     "named": true,
+    "root": true,
     "fields": {},
     "children": {
       "multiple": true,
@@ -1088,16 +1043,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1268,16 +1213,6 @@
           }
         ]
       }
-    },
-    "children": {
-      "multiple": false,
-      "required": false,
-      "types": [
-        {
-          "type": "comment",
-          "named": true
-        }
-      ]
     }
   },
   {
@@ -1491,10 +1426,6 @@
     "named": true
   },
   {
-    "type": "float",
-    "named": true
-  },
-  {
     "type": "for",
     "named": false
   },
@@ -1545,6 +1476,10 @@
   {
     "type": "or",
     "named": false
+  },
+  {
+    "type": "real",
+    "named": true
   },
   {
     "type": "real",

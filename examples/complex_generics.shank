@@ -1,8 +1,24 @@
-define main(v: LinkedList refersTo integer)
+record LinkedList generic V
+	t: V
+record Map generic V, G
+	t: V
+	v: G
+record foo
+	t: integer
+record bar
+	t: integer
+record Integer
+	t: integer
+define main(v: LinkedList refersTo Integer)
 	pass
 
 
-define main2(v: LinkedList (refersTo array from 0 to 10 of integer))
+define main2(v: LinkedList refersTo array from 0 to 10 of Integer)
 	pass
-define main(v: refersTo LinkedList refersTo integer;  v: LinkedList foo, (array from 0 to 10 of bar))
+define main(x: refersTo LinkedList refersTo Integer;  v: Map LinkedList foo, array from 0 to 10 of bar)
 	pass
+
+define start()
+	write
+define pass()
+	write

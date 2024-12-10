@@ -36,19 +36,5 @@
     "test": "tree-sitter test",
     "install": "node-gyp-build",
     "prebuildify": "prebuildify --napi --strip"
-  },
-  "tree-sitter": [
-    {
-      "scope": "source.shank",
-      "file-types": [
-        "shank"
-      ],
-      "highlights": [
-        "queries/highlights.scm"
-      ],
-      "tags": [
-        "queries/tags.scm"
-      ]
-    }
-  ]
+  }
 }

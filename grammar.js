@@ -31,36 +31,16 @@ const PREC = {
 module.exports = grammar({
   name: 'shank',
 
-  // extras: $ => [
-  //   $.comment,
-  //   /[\s\f\uFEFF\u2060\u200B]|\r?\n/,
-  //   $.line_continuation,
-  // ],
+  extras: $ => [
+    $.comment,
+    /[\s\f\uFEFF\u2060\u200B]|\r?\n/,
+  ],
 
   conflicts: $ => [
     [$.argument, $.primary_expression],
-    // [$._custom_generic_type, $._custom_type],
-    // [$.record_item, $.advanced_type]
-    // [$.record_item, $.advanced_type]
-    // [$.advanced_type, $.record_item,]
-    //   [$.primary_expression, $.pattern],
-    //   [$.primary_expression, $.list_splat_pattern],
-    //   [$.tuple, $.tuple_pattern],
-    //   [$.list, $.list_pattern],
-    //   [$.with_item, $._collection_elements],
-    //   [$.named_expression, $.as_pattern],
-    //   [$.print_statement, $.primary_expression],
-    //   [$.type_alias_statement, $.primary_expression],
+
   ],
 
-  // supertypes: $ => [
-  //   $._simple_statement,
-  //   $._compound_statement,
-  //   $.expression,
-  //   $.primary_expression,
-  //   $.pattern,
-  //   $.parameter,
-  // ],
 
   externals: $ => [
     $._newline,
@@ -82,47 +62,13 @@ module.exports = grammar({
     // so that it can avoid returning dedent tokens between brackets.
     // ']',
     // ')',
-    // '}',
+    '}',
     // 'except',
   ],
 
-  inline: $ => [
-    // $.comparison_operator
-    //   $._simple_statement,
-    //   $._compound_statement,
-    //   $._suite,
-    //   $._expressions,
-    //   $._left_hand_side,
-    //   $.keyword_identifier,
-  ],
 
-
-
-  // word: $ => $.identifier,
 
   rules: {
-    // module: $ => repeat($._statement),
-
-    // _statement: $ => choice(
-    //   $._simple_statements,
-    //   $._compound_statement,
-    // ),
-
-    // // Simple statements
-
-    // _simple_statements: $ => seq(
-    //   sep1($._simple_statement, SEMICOLON),
-    //   optional(SEMICOLON),
-    //   $._newline,
-    // ),
-
-    // _suite: $ => choice(
-    //   alias($._simple_statements, $.block),
-    //   seq($._indent, $.block),
-    //   alias($._newline, $.block),
-    // ),
-
-
     program: $ => seq(
       optional($.module),
       // a module is a list of vairables and functions intermixed
@@ -211,8 +157,6 @@ module.exports = grammar({
       ":",
       field("type", $.type),
       optional(field("default_value", seq("=", $.primary_expression))),
-      // TODO: should this be optional
-      $._end_line
     ),
 
     variable: $ => seq(
@@ -226,15 +170,12 @@ module.exports = grammar({
     primary_expression: $ => choice(
       $.binary_operator,
       $.variable_access,
-      //     $.keyword_identifier,
       $.string,
       $.character,
       $.integer,
-      $.float,
+      $.real,
       $.true,
       $.false,
-      //     $.none,
-      //     $.unary_operator,
       $.parenthesized_expression,
     ),
 
@@ -274,11 +215,6 @@ module.exports = grammar({
       ))));
     },
 
-    //   unary_operator: $ => prec(PREC.unary, seq(
-    //     field('operator', choice('+', '-', '~')),
-    //     field('argument', $.primary_expression),
-    //   )),
-
     comparison_operator: $ => prec.left(PREC.compare, seq(
       $.primary_expression,
       repeat1(seq(
@@ -302,22 +238,23 @@ module.exports = grammar({
     )),
 
     integer: _ => token(
-      repeat1(/[0-9]+_?/),
+      /-?[0-9]+_?/,
 
     ),
 
-    float: _ => {
-      const digits = repeat1(/[0-9]+_?/);
+    real: _ => {
+      const digits = /[0-9]+_?/;
 
-      return token(
-        seq(digits, '.', digits,),
+      // TODO: allow reals that have number on one side of decimal
+      return token(seq(/-?/,
+        seq(/-?/, digits, '.', digits,),)
       );
     },
     // TODO: escape sequences
     string: _ => token(seq('\"', repeat(/[^\\"]/), '\"')),
     character: _ => token(seq('\'', /[^\\']/, '\'')),
 
-    basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.float))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
+    basis_type: $ => choice(seq("integer", optional(type_constraint($.integer))), seq("real", optional(type_constraint($.real))), seq("string", optional(type_constraint($.integer))), seq("character", optional(type_constraint($.integer))), "boolean"),
     array_type: $ => seq("array", type_constraint($.integer), "of", $.type),
     // TODO: do we want simple array types allowed to be used as part of generics without parenthesis
     _generic: $ => field("generic", choice($.basis_type, alias($.simple_reference_type, $.reference_type), alias($.simple_custom_type, $.custom_type), paren($.type))),
@@ -335,12 +272,11 @@ module.exports = grammar({
     comment: $ => seq(token(
       /\{[^}]*(?:[^}][^}]*)*\}[^\S\n]*/), $._newline
     ),
-    _end_line: $ => choice($.comment, $._newline),
+    _end_line: $ => $._newline,
     identifier: _ => /[_\p{XID_Start}][_\p{XID_Continue}]*/,
     array_access: $ => seq($.identifier, "[", $.expression, "]"),
     record_access: $ => seq($.identifier, ".", $.identifier),
     variable_access: $ => seq($.identifier, repeat(choice(field("field_acces", seq(".", field("field", $.identifier))), field("array_access", seq("[", field("index", $.expression), "]"))))),
-    // variable_access: $ => choice($.array_access, $.record_access, $.identifier),
 
     true: _ => 'true',
     false: _ => 'false',
