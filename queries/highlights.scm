@@ -21,7 +21,7 @@
 (true) @constant.builtin
 (false) @constant.builtin
 (true) @constant.builtin
-(float) @constant.builtin
+(real) @constant.builtin
 
 (character) @string
 (string) @string
@@ -70,7 +70,7 @@
 
 "and" @operator
 "or" @operator
-"not" @operator 
+"not" @operator
 "<=" @operator
 ">=" @operator
 "=" @operator
